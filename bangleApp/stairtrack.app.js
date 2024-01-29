@@ -29,16 +29,21 @@ function dataHandlerAccel(data) {
 
 function analyze() {
   if(tracking && altitude.length > samplingIntervall) {
+    //write into the current list data to aggregate, ao that first 5 elements are removed from the actuall collected data
     var currAlt = [altitude.shift(),altitude.shift(),altitude.shift(),altitude.shift(),altitude.shift(),altitude[0],altitude[1],altitude[2],altitude[3],altitude[4]];
     var currMag = [mag.shift(),mag.shift(),mag.shift(),mag.shift(),mag.shift(),mag[0],mag[1],mag[2],mag[3],mag[4]];
+    //get the pitch
     var altTrendline = linearRegression(currAlt);
     var sum = currMag.reduce(function (acc, value) {
       return acc + value;
     }, 0);
+    //calculate the mean magnitude
     var meanMag = sum / samplingIntervall;
+    //calculate the diff
     var altDiffMinMax = Math.max.apply(null, currAlt)-Math.min.apply(null, currAlt);
     var altDiffFirstsLast = Math.abs(currAlt[9] - currAlt[0]);
     //console.log("altTrendline: " + altTrendline + "; meanMag: " + meanMag + "; altDiffMinMax: " + altDiffMinMax + "; altDiffFirstsLast: " +altDiffFirstsLast);
+    //Make a decision
     if(Math.abs(altTrendline) > 0.1 && (altDiffMinMax > 3 || altDiffFirstsLast > 1)) {
       if(meanMag <= 1.03){
         if(altDiffMinMax > 2 && altDiffFirstsLast > 2){
@@ -73,6 +78,7 @@ function analyze() {
   updateMenu();
 }
 
+//Calculate the pitch
 function linearRegression(currAlt) {
     if (xData.length !== currAlt.length || currAlt.length === 0) {
       console.log("Invalid data");

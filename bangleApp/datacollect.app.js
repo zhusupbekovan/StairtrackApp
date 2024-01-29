@@ -2,11 +2,10 @@ var BarCounter = 1;
 var AccelCounter = 0;
 var FileName;
 var intervalBar = null;
-var intervalAccel = null;
 
 var file;
 var saveToFile = false;
-
+//Write barometer data in file
 function dataHandlerBar(data) {
   if (data !== undefined) {
     var formattedDate = new Date(Date.now()).toISOString().slice(0, 19).replace("T", " ");
@@ -15,23 +14,14 @@ function dataHandlerBar(data) {
     BarCounter++;
   }
 }
+
+//Write accelerometer data in file
 function dataHandlerAccel(data) {
   if (data !== undefined && AccelCounter < BarCounter) {
     var rowData = [ data.x,data.y,data.z,data.diff,data.mag].join(",") + "\n";
     file.write("," + rowData);
     AccelCounter++;
   }
-}
-
-function readAndRemoveFirstRow() {
-  file = require("Storage").open("data" + Counter + ".csv", "r");
-  file.readLine();
-  var line;
-  while ((line = file.readLine()) !== undefined) {
-    // Process the row (you can parse and use the data as needed)
-    console.log("Row:", line);
-  }
-  file.close();
 }
 
 var mainmenu = {
