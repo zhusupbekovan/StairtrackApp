@@ -1,0 +1,6 @@
+{
+  "id":"stairtrack",
+  "name":"Stair Track",
+  "src":"stairtrack.app.js",
+  "icon":"stairs.png"
+}

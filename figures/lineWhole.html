@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+
+<div id="myPlot" style="width:100%;max-width:700px"></div>
+
+<script>
+
+const yArray  =  [78.34650521,77.44792266,77.69146377,77.07632959,76.77160106,76.87538345,76.63412393,76.66046159,76.78279562,76.84086195,77.13134768,77.59469346,77.42140972,77.24985233,76.82326416,77.12347027,77.31743799,77.27900496,77.23806172,77.24260211,77.13674951,77.18328274,77.16672931,77.21311186,77.25418204,77.19067757,77.2167266,77.17856727,77.17868537,77.30797882,77.81169436,77.92459405,77.49997416,77.31587998,77.28746482,77.21918174,77.28594717,77.21767677,77.22731805,77.24082941,77.22869405,77.26163978,77.28573696,77.2428567,77.29765282,77.24187168,77.2801055,77.21813629,77.25015993,72.71147222,78.27237922,77.4530727];
+
+
+
+function createList(n) {
+    var myList = [];
+    for (var i = 1; i <= n; i++) {
+        myList.push(i);
+    }
+    return myList;
+}
+
+const xArray = createList(yArray.length);
+
+
+const plotlyData = [
+    {
+        x: xArray,
+        y: yArray,
+        mode: "markers",
+        type: "scatter",
+        marker: { size: 8 },
+        name: "Altitude"
+    },
+    {
+        x: xArray,
+        y: yArray,
+        type: "scatter",
+        mode: "lines",
+        line: {
+            color: 'red',
+        },
+        name: 'Trendline',
+        showlegend: true, 
+        connectgaps: true,
+    }
+];
+
+// Define Layout
+const layout = {
+    title: 'Stairs Up',
+    xaxis: {
+        showline: false,  // Hide x-axis line
+        zeroline: false,  // Hide x-axis zero line
+        range: [Math.min(...xArray), Math.max(...xArray)],
+        showticklabels: false,
+    },
+    yaxis: {
+        showline: false,  // Hide y-axis line
+        range: [Math.min(...yArray), Math.max(...yArray)]
+    },
+};
+
+// Display using Plotly
+Plotly.newPlot("myPlot", plotlyData, layout);
+</script>
+
+</body>
+</html>

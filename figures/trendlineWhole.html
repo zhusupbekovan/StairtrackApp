@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+
+<div id="myPlot" style="width:100%;max-width:700px"></div>
+
+<script>
+
+const yArray  =  [280.0512177,280.4443397,279.7189085,279.4376299,279.2861815,279.3404363,279.4036245,279.3478355,279.3019109,279.2733208,279.3774888,279.7295123,279.7095034,279.6838674,279.7621906,279.7642669,279.8055516,279.7783515,279.7818132,279.8396006,279.2907801,278.7238422,277.8897233,277.0302764,276.1393542,275.194039,274.2188525,273.1941368,272.540136,271.854974,271.8553816,271.4054094,273.9610098,272.0488827,272.3324125,272.1308357,272.2237336,272.2433947,272.3036609,271.6230018,272.3638843,272.0840117,272.6693184,272.4756932,272.3586157,272.3869597,272.313418,272.2567138,272.209455,271.9364042,270.6378668,270.4452962,269.3842473,268.3746004,267.497705,266.5283651,265.6878929,264.323717,263.1788803,261.9291376,262.1990949,259.9175113,258.4889206,258.7006842,258.6234158,258.7839822,258.8774862,258.9794888,258.9456279,259.3292709,259.2200586,258.527139];
+
+
+
+
+
+
+function createList(n) {
+    var myList = [];
+    for (var i = 1; i <= n; i++) {
+        myList.push(i);
+    }
+    return myList;
+}
+
+const xArray = createList(yArray.length);
+const layout = {
+    //title: 'Still',
+    xaxis: {
+        showline: false,  // Hide x-axis line
+        zeroline: false,  // Hide x-axis zero line
+        range: [Math.min(...xArray), Math.max(...xArray)],
+        showticklabels: false,
+    },
+    yaxis: {
+        showline: false,  // Hide y-axis line
+        range: [Math.min(...yArray), Math.max(...yArray)]
+    },
+};
+
+// Create a scatter plot using your data points
+const scatterTrace = {
+    x: xArray,
+    y: yArray,
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Altitude'
+};
+
+function linearRegression(currAlt) {
+    let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+    for (let i = 0; i < yArray.length; i++) {
+        sumX += xArray[i];
+        sumY += currAlt[i];
+        sumXY += xArray[i] * currAlt[i];
+        sumX2 += xArray[i] * xArray[i];
+    }
+    return (yArray.length * sumXY - sumX * sumY) / (yArray.length * sumX2 - sumX * sumX);
+}
+
+const slope = linearRegression(yArray);
+const intercept = yArray.reduce((sum, y, i) => sum + y - slope * xArray[i], 0) / yArray.length;
+
+const trendlineY = xArray.map(x => slope * x + intercept);
+
+const trendline = {
+    x: xArray,
+    y: trendlineY,
+    mode: 'lines', // Corrected mode to 'lines'
+    type: 'scatter',
+    name: 'Trendline',
+    line: { color: 'red' } // You can customize the line color as desired
+};
+
+// Display using Plotly
+Plotly.newPlot('myPlot', [scatterTrace, trendline], layout);
+</script>
+
+</body>
+</html>
